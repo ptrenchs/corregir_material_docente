@@ -72,6 +72,7 @@ class Corregir:
                 ruta_corretgit = carpeta_corretgit + '/' + os.path.basename(ruta_al)
                 with open(ruta_corretgit, 'w', encoding='utf-8') as nuevo_archivo:
                     json.dump(datos_var, nuevo_archivo, ensure_ascii=False, indent=4)
+                return carpeta_corretgit
             else:
                 print(f'Revisa el nombre del archivo {nombre_al}')
 

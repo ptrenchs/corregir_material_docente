@@ -26,7 +26,11 @@ class Corregir:
                 with open(ruta_ref,'r',encoding='utf-8') as archivo:
                     datos = json.load(archivo)
 
+                with open(ruta_ref,'r',encoding='utf-8') as archivo:
+                    datos_var = json.load(archivo)
+
                 i_ref_0 = 0
+                i_cel = 0
                 codigo_ref = ''
                 for i_al,line_al in enumerate(codigo_al):
                     var_d_al = fucniones_strings.linea(line = line_al).var_dep()
@@ -34,34 +38,40 @@ class Corregir:
                         left_al = ((var_d_al.split('=')[0]).replace('\t','')).replace(' ','')
                         dic_al = Extraer_Codigo.extraer_variables(codigo_py = codigo_al[:i_al+1])
                         right_al = dic_al[left_al]
+
                         for i_ref in range(i_ref_0,len(datos['cells'])):
                             if datos['cells'][i_ref]['cell_type'] == 'code':
-                                for i in range(len(datos['cells'][i_ref]['source'])):
-                                    var_d_ref = fucniones_strings.linea(line = datos['cells'][i_ref]['source'][i]).var_dep()
+                                
+                                for i in range(i_cel,len(datos['cells'][i_ref]['source'])):
+                                    line_ref = datos['cells'][i_ref]['source'][i]
+                                    # print(line_ref,left_al)
+                                    var_d_ref = fucniones_strings.linea(line = line_ref).var_dep()
                                     left_ref = ((var_d_ref.split('=')[0]).replace('\t','')).replace(' ','')
                                     if left_ref == left_al:
-                                        i_ref_0 += i_ref + 1
+                                        i_ref_0 = i_ref
+                                        i_cel = i
+                                        # print(codigo_ref + line_ref)
 
-                                        print(codigo_ref + datos['cells'][i_ref]['source'][i])
-
-                                        dic_ref = Extraer_Codigo.extraer_variables(codigo_py = codigo_ref + datos['cells'][i_ref]['source'][i])
+                                        dic_ref = Extraer_Codigo.extraer_variables(codigo_py = codigo_ref + line_ref)
                                         right_ref = dic_ref[left_ref]
                                         err_r = abs(right_ref-right_al)/abs(right_ref)
-                                        if err_r < 0.5:
-                                            datos['cells'][i_ref]['source'][i] = '#---- Resposta correcte ----#\n' + datos['cells'][i_ref]['source'][i] + '#---- Resposta correcte ----#\n'
+                                        if err_r < 0.05:
+                                            datos_var['cells'][i_ref]['source'][i] = '#---- Resposta correcte ----#\n' + line_ref + '#---- Resposta correcte ----#\n'
                                         else:
-                                            datos['cells'][i_ref]['source'][i] = '#---- Resposta incorrecte ----#\n' + datos['cells'][i_ref]['source'][i] + f'print({left_ref})\n{left_al} = {right_al}\n' + '#---- Resposta incorrecte ----#\n'
+                                            datos_var['cells'][i_ref]['source'][i] = '#---- Resposta incorrecte ----#\n' + line_ref + f'print({left_ref})\n{left_al} = {right_al}\n' + '#---- Resposta incorrecte ----#\n'
+                                            datos['cells'][i_ref]['source'][i] = f'{left_al} = {right_al}\n'
                                         break
-                                    codigo_ref += datos['cells'][i_ref]['source'][i].replace('\n','') + '\n'
+                                    codigo_ref += line_ref.replace('\n','') + '\n'
+                                i_cel = 0
 
-                                    print('\n\n sep')
+                                    # print('\n\n sep')
                                 if left_ref == left_al:
                                     break
                 carpeta_corretgit = '/'.join(ruta_al.split('/')[:-2]) + '/5-corretgit'
                 os.makedirs(carpeta_corretgit,exist_ok=True)
                 ruta_corretgit = carpeta_corretgit + '/' + os.path.basename(ruta_al)
                 with open(ruta_corretgit, 'w', encoding='utf-8') as nuevo_archivo:
-                    json.dump(datos, nuevo_archivo, ensure_ascii=False, indent=4)
+                    json.dump(datos_var, nuevo_archivo, ensure_ascii=False, indent=4)
             else:
                 print(f'Revisa el nombre del archivo {nombre_al}')
 

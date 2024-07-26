@@ -5,4 +5,5 @@ carpeta = contenido_directorio.Directorio('/home/ptrenchs/Escritorio/carpeta_pro
 archivos_ipynb = contenido_directorio.Filtros_formato(rutas = carpeta,formatos = 'ipynb').elejir()
 archivos_ipynb = contenido_directorio.Filtros_carpetas(rutas = archivos_ipynb,carpetas = '.ipynb_checkpoints').eliminar()
 archivos_ipynb = contenido_directorio.Filtros_carpetas(rutas = archivos_ipynb,carpetas = '2-carpeta_clase').elejir()
+print(archivos_ipynb)
 manipulacion_archivos.Corregir(archivos_ipynb).corregir()

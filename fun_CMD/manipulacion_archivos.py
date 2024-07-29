@@ -20,8 +20,8 @@ class Corregir:
                 if nombre_ref in nombre_al or nombre_ref == nombre_al:
                     break
             if nombre_ref in nombre_al or nombre_ref == nombre_al:
-                print(ruta_al)
-                print(ruta_ref)
+                # print(ruta_al)
+                # print(ruta_ref)
                 codigo_al = Extraer_Codigo(ruta_al).Codigo().split('\n')
                 with open(ruta_ref,'r',encoding='utf-8') as archivo:
                     datos = json.load(archivo)
@@ -43,11 +43,12 @@ class Corregir:
                             if datos['cells'][i_ref]['cell_type'] == 'code':
                                 
                                 for i in range(i_cel,len(datos['cells'][i_ref]['source'])):
-                                    line_ref = datos['cells'][i_ref]['source'][i]
-                                    # print(line_ref,left_al)
+                                    line_ref = datos['cells'][i_ref]['source'][i]                                    
                                     var_d_ref = fucniones_strings.linea(line = line_ref).var_dep()
                                     left_ref = ((var_d_ref.split('=')[0]).replace('\t','')).replace(' ','')
+                                    # print([line_ref])
                                     if left_ref == left_al:
+                                        # print([left_ref,left_al])
                                         i_ref_0 = i_ref
                                         i_cel = i
                                         # print(codigo_ref + line_ref)

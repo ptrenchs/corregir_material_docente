@@ -13,6 +13,8 @@ class Corregir:
         
         archivos_ref= contenido_directorio.Filtros_formato(rutas = carpeta_principal,formatos = 'ipynb').elejir()
         archivos_ref = contenido_directorio.Filtros_carpetas(rutas = archivos_ref,carpetas = '.ipynb_checkpoints').eliminar()
+        if contenido_directorio.Filtros_carpetas(rutas = archivos_ref,carpetas = '2-ejercicio_resuelto').elejir() != []:
+            archivos_ref = contenido_directorio.Filtros_carpetas(rutas = archivos_ref,carpetas = '2-ejercicio_resuelto').elejir()
         for ruta_al in self.rutas_alumno:            
             nombre_al = '.'.join(os.path.basename(ruta_al).split('.')[:-1])
             for ruta_ref in archivos_ref:
